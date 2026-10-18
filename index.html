@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة التعليمية - الصفحة الرئيسية</title>
+    <title>المنصة التعليمية - المعلم رباح الفضيلات</title>
     <!-- استدعاء خط Cairo من Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,7 +112,6 @@
         .btn-primary {
             background-color: var(--accent-color);
             color: white;
-            margin-left: 0.5rem;
         }
 
         .btn-primary:hover {
@@ -120,8 +119,8 @@
             transform: translateY(-2px);
         }
 
-        /* قسم المميزات / الخدمات */
-        .features {
+        /* قسم الدروس والملفات المحدثة من لوحة التحكم */
+        .dynamic-lessons {
             max-width: 1200px;
             margin: 4rem auto;
             padding: 0 2rem;
@@ -132,6 +131,74 @@
             font-size: 2rem;
             color: var(--primary-color);
             margin-bottom: 2.5rem;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .lesson-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-right: 5px solid var(--secondary-color);
+            transition: transform 0.3s;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .lesson-tag {
+            display: inline-block;
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+        }
+
+        .lesson-card h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .lesson-link {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .lesson-link:hover {
+            background-color: var(--primary-color);
+        }
+
+        .no-lessons {
+            text-align: center;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+        }
+
+        /* قسم المميزات / الخدمات الثابتة */
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
         }
 
         .grid {
@@ -146,11 +213,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
         }
 
         .card-icon {
@@ -177,7 +239,6 @@
             margin-top: 4rem;
         }
 
-        /* تصميم متجاوب للشاشات الصغيرة */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -197,9 +258,8 @@
             <a href="#" class="logo">المنصة التعليمية</a>
             <ul class="nav-links">
                 <li><a href="#">الرئيسية</a></li>
-                <li><a href="#about">عن المنصة</a></li>
-                <li><a href="#features">المميزات</a></li>
-                <li><a href="#contact">تواصل معنا</a></li>
+                <li><a href="#lessons">الدروس والملفات</a></li>
+                <li><a href="#features">مميزات المنصة</a></li>
             </ul>
         </nav>
     </header>
@@ -208,29 +268,37 @@
     <section class="hero">
         <div class="hero-content">
             <h1>مرحباً بكم في المنصة التعليمية الرقمية</h1>
-            <p>توفير الخطط الدراسية، أوراق العمل، والإستراتيجيات التعليمية المبتكرة لتعزيز تجربة التعلم.</p>
-            <a href="#features" class="btn btn-primary">استكشف المحتوى</a>
+            <p>توفير الخطط الدراسية، أوراق العمل، والملفات التعليمية المحدثة باستمرار.</p>
+            <a href="#lessons" class="btn btn-primary">تصفح أحدث الدروس</a>
+        </div>
+    </section>
+
+    <!-- قسم الدروس والملفات الديناميكية (تتحدث تلقائياً عند الإضافة من لوحة التحكم) -->
+    <section class="dynamic-lessons" id="lessons">
+        <h2 class="section-title">أحدث الدروس والملفات المضافة</h2>
+        <div id="public-lessons-grid" class="lessons-grid">
+            <!-- سيتم جلب الدروس هنا تلقائياً من التخزين المشترك -->
         </div>
     </section>
 
     <!-- قسم المميزات والخدمات -->
     <section class="features" id="features">
-        <h2 class="section-title">ماذا نقدم؟</h2>
+        <h2 class="section-title">ما نقدمه لطلابنا</h2>
         <div class="grid">
             <div class="card">
                 <div class="card-icon">📚</div>
                 <h3>خطط ودروس متكاملة</h3>
-                <p>إعداد تحليل محتوى وخطط فصلية ومعالجة لجميع المهارات التعليمية.</p>
+                <p>إعداد تحليل محتوى وخطط فصلية لجميع المهارات التعليمية.</p>
             </div>
             <div class="card">
                 <div class="card-icon">📝</div>
                 <h3>أوراق عمل واختبارات</h3>
-                <p>نماذج تقييم تشخيصية وختامية جاهزة للاستخدام للطلاب.</p>
+                <p>نماذج تقييم تشخيصية وختامية جاهزة للاستخدام.</p>
             </div>
             <div class="card">
                 <div class="card-icon">💡</div>
                 <h3>استراتيجيات حديثة</h3>
-                <p>تطبيق أدوات التعلم النشط وإدارة الغرفة الصفية بكفاءة عالية.</p>
+                <p>تطبيق أدوات التعلم النشط وإدارة الغرفة الصفية بكفاءة.</p>
             </div>
         </div>
     </section>
@@ -239,6 +307,34 @@
     <footer>
         <p>© 2026 جميع الحقوق محفوظة - المنصة التعليمية</p>
     </footer>
+
+    <script>
+        // دمج وجلب البيانات المدخلة من لوحة التحكم وعرضها للزوار
+        function loadPublicLessons() {
+            const gridEl = document.getElementById('public-lessons-grid');
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+
+            if (items.length === 0) {
+                gridEl.innerHTML = '<div class="no-lessons"><p>لا توجد دروس أو ملفات منشورة حالياً. ترقبوا المحتوى الجديد قريباً!</p></div>';
+                return;
+            }
+
+            gridEl.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                card.innerHTML = `
+                    <span class="lesson-tag">${item.type}</span>
+                    <h3>${item.title}</h3>
+                    <a href="${item.link}" target="_blank" class="lesson-link">عرض / تحميل الملف 📁</a>
+                `;
+                gridEl.appendChild(card);
+            });
+        }
+
+        // تشغيل الدالة عند تحميل الصفحة
+        window.onload = loadPublicLessons;
+    </script>
 
 </body>
 </html>

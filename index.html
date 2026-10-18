@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* إعادة ضبط العناصر الأساسية */
         * {
             margin: 0;
             padding: 0;
@@ -25,6 +24,7 @@
             --bg-light: #f8fafc;
             --text-dark: #1e293b;
             --text-muted: #64748b;
+            --danger-color: #ef4444;
         }
 
         body {
@@ -62,6 +62,7 @@
             display: flex;
             list-style: none;
             gap: 1.5rem;
+            align-items: center;
         }
 
         .nav-links a {
@@ -73,6 +74,18 @@
 
         .nav-links a:hover {
             color: var(--secondary-color);
+        }
+
+        .admin-login-btn {
+            background-color: var(--primary-color);
+            color: white !important;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .admin-login-btn:hover {
+            background-color: var(--secondary-color) !important;
         }
 
         /* قسم الترحيب (Hero Section) */
@@ -119,7 +132,7 @@
             transform: translateY(-2px);
         }
 
-        /* قسم الدروس والملفات المحدثة من لوحة التحكم */
+        /* قسم الدروس والملفات الديناميكية */
         .dynamic-lessons {
             max-width: 1200px;
             margin: 4rem auto;
@@ -192,42 +205,74 @@
             padding: 2rem;
             background: white;
             border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
 
-        /* قسم المميزات / الخدمات الثابتة */
-        .features {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 0 2rem;
+        /* نافذة تسجيل الدخول المنبثقة (Modal) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
+        .modal-card {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
+            position: relative;
         }
 
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .card h3 {
-            margin-bottom: 0.5rem;
+        .modal-card h2 {
             color: var(--primary-color);
+            margin-bottom: 1.5rem;
         }
 
-        .card p {
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
             color: var(--text-muted);
-            font-size: 0.95rem;
+        }
+
+        .error-msg {
+            color: var(--danger-color);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
         }
 
         /* الفوتر */
@@ -244,9 +289,6 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-            .hero h1 {
-                font-size: 1.8rem;
-            }
         }
     </style>
 </head>
@@ -259,7 +301,7 @@
             <ul class="nav-links">
                 <li><a href="#">الرئيسية</a></li>
                 <li><a href="#lessons">الدروس والملفات</a></li>
-                <li><a href="#features">مميزات المنصة</a></li>
+                <li><a href="#" class="admin-login-btn" onclick="openLoginModal(event)">دخول المعلم 🔐</a></li>
             </ul>
         </nav>
     </header>
@@ -273,35 +315,33 @@
         </div>
     </section>
 
-    <!-- قسم الدروس والملفات الديناميكية (تتحدث تلقائياً عند الإضافة من لوحة التحكم) -->
+    <!-- قسم الدروس والملفات الديناميكية -->
     <section class="dynamic-lessons" id="lessons">
         <h2 class="section-title">أحدث الدروس والملفات المضافة</h2>
         <div id="public-lessons-grid" class="lessons-grid">
-            <!-- سيتم جلب الدروس هنا تلقائياً من التخزين المشترك -->
+            <!-- سيتم جلب الدروس هنا تلقائياً -->
         </div>
     </section>
 
-    <!-- قسم المميزات والخدمات -->
-    <section class="features" id="features">
-        <h2 class="section-title">ما نقدمه لطلابنا</h2>
-        <div class="grid">
-            <div class="card">
-                <div class="card-icon">📚</div>
-                <h3>خطط ودروس متكاملة</h3>
-                <p>إعداد تحليل محتوى وخطط فصلية لجميع المهارات التعليمية.</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">📝</div>
-                <h3>أوراق عمل واختبارات</h3>
-                <p>نماذج تقييم تشخيصية وختامية جاهزة للاستخدام.</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">💡</div>
-                <h3>استراتيجيات حديثة</h3>
-                <p>تطبيق أدوات التعلم النشط وإدارة الغرفة الصفية بكفاءة.</p>
-            </div>
+    <!-- نافذة تسجيل الدخول المنبثقة الخاصة بالمعلم -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="close-modal" onclick="closeLoginModal()">✕</button>
+            <h2>لوحة تحكم المعلم</h2>
+            <form id="login-form" onsubmit="handleDirectLogin(event)">
+                <div class="form-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="username" class="form-control" required placeholder="أدخل اسم المستخدم">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" class="form-control" required placeholder="أدخل كلمة المرور">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">تسجيل الدخول</button>
+                <p id="error-msg" class="error-msg">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
+            </form>
         </div>
-    </section>
+    </div>
 
     <!-- الفوتر -->
     <footer>
@@ -309,7 +349,35 @@
     </footer>
 
     <script>
-        // دمج وجلب البيانات المدخلة من لوحة التحكم وعرضها للزوار
+        const CORRECT_USER = "teacher";
+        const CORRECT_PASS = "rabah2026";
+
+        function openLoginModal(event) {
+            event.preventDefault();
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('login-form').reset();
+            document.getElementById('error-msg').style.display = 'none';
+        }
+
+        function handleDirectLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            if (user === CORRECT_USER && pass === CORRECT_PASS) {
+                // الانتقال إلى لوحة التحكم عند صحة البيانات
+                window.location.href = 'admin.html';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // جلب الدروس المضافة من لوحة التحكم وعرضها
         function loadPublicLessons() {
             const gridEl = document.getElementById('public-lessons-grid');
             let items = JSON.parse(localStorage.getItem('site_content')) || [];
@@ -332,9 +400,7 @@
             });
         }
 
-        // تشغيل الدالة عند تحميل الصفحة
         window.onload = loadPublicLessons;
     </script>
-
 </body>
 </html>

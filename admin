@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المعلم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            direction: rtl;
+        }
+
+        /* شاشة تسجيل الدخول */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .login-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #1e40af;
+        }
+
+        .error-msg {
+            color: var(--danger-color);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* لوحة التحكم الفعلية (تكون مخفية حتى يتم تسجيل الدخول) */
+        #dashboard-screen {
+            display: none;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background-color: var(--danger-color);
+            width: auto;
+            padding: 0.5rem 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .panel h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 0.5rem;
+        }
+
+        .content-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .content-item {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>لوحة التحكم الخاصة</h2>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="username" class="form-control" required placeholder="أدخل اسم المستخدم">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" class="form-control" required placeholder="أدخل كلمة المرور">
+                </div>
+                <button type="submit" class="btn">دخول</button>
+                <p id="error-msg" class="error-msg">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. لوحة التحكم (مخفية افتراضياً) -->
+    <div id="dashboard-screen" style="display: none;">
+        <header>
+            <h2>لوحة إدارة المحتوى التعليمي</h2>
+            <button class="btn logout-btn" onclick="handleLogout()">تسجيل الخروج</button>
+        </header>
+
+        <div class="container">
+            <!-- نموذج إضافة درس أو ملف من قوقل درايف -->
+            <div class="panel">
+                <h3>إضافة درس أو ملف جديد (رابط Google Drive)</h3>
+                <form id="upload-form" onsubmit="addContent(event)">
+                    <div class="form-group">
+                        <label>عنوان الدرس / الملف</label>
+                        <input type="text" id="item-title" class="form-control" required placeholder="مثال: ورقة عمل قواعد اللغة العربية - الصف السابع">
+                    </div>
+                    <div class="form-group">
+                        <label>رابط الملف من قوقل درايف (Google Drive Link)</label>
+                        <input type="url" id="item-link" class="form-control" required placeholder="https://drive.google.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>نوع المحتوى</label>
+                        <select id="item-type" class="form-control">
+                            <option value="درس كتابي / خطة">درس كتابي / خطة</option>
+                            <option value="ورقة عمل">ورقة عمل</option>
+                            <option value="صورة / وسائط">صورة / وسائط</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" style="background-color: var(--success-color);">حفظ ونشر في الموقع</button>
+                </form>
+            </div>
+
+            <!-- قائمة المحتوى الحالي -->
+            <div class="panel">
+                <h3>الملفات والدروس المنشورة حالياً</h3>
+                <ul id="content-list" class="content-list">
+                    <!-- سيتم إضافة العناصر هنا برمجياً -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الدخول المعرفة مسبقاً
+        const CORRECT_USER = "teacher";
+        const CORRECT_PASS = "rabah2026";
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            if (user === CORRECT_USER && pass === CORRECT_PASS) {
+                // إخفاء شاشة الدخول وإظهار لوحة التحكم
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'flex';
+                loadStoredContent();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('dashboard-screen').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('login-form').reset();
+        }
+
+        // تخزين وعرض الدروس باستخدام التخزين المحلي للمتصفح (LocalStorage)
+        function addContent(event) {
+            event.preventDefault();
+            const title = document.getElementById('item-title').value;
+            const link = document.getElementById('item-link').value;
+            const type = document.getElementById('item-type').value;
+
+            const newItem = { title, link, type, id: Date.now() };
+            
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+            items.push(newItem);
+            localStorage.setItem('site_content', JSON.stringify(items));
+
+            document.getElementById('upload-form').reset();
+            loadStoredContent();
+            alert('تم نشر المحتوى بنجاح!');
+        }
+
+        function loadStoredContent() {
+            const listEl = document.getElementById('content-list');
+            listEl.innerHTML = '';
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+
+            if (items.length === 0) {
+                listEl.innerHTML = '<p style="text-align: center; color: #64748b;">لا توجد ملفات مرفوعة حالياً.</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'content-item';
+                li.innerHTML = `
+                    <div>
+                        <strong>[${item.type}] ${item.title}</strong><br>
+                        <a href="${item.link}" target="_blank" style="color: var(--secondary-color); font-size: 0.9rem;">رابط قوقل درايف</a>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${item.id})">حذف</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function deleteItem(id) {
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+            items = items.filter(item => item.id !== id);
+            localStorage.setItem('site_content', JSON.stringify(items));
+            loadStoredContent();
+        }
+    </script>
+</body>
+</html>

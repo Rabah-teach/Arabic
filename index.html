@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المنصة التعليمية - المعلم رباح الفضيلات</title>
-    <!-- استدعاء خط Cairo من Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -18,9 +17,9 @@
         }
 
         :root {
-            --primary-color: #1e3a8a; /* أزرق داكن */
-            --secondary-color: #3b82f6; /* أزرق فاتح */
-            --accent-color: #f59e0b; /* ذهبي/برتقالي */
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
             --bg-light: #f8fafc;
             --text-dark: #1e293b;
             --text-muted: #64748b;
@@ -33,7 +32,6 @@
             line-height: 1.6;
         }
 
-        /* الهيدر وقائمة التنقل */
         header {
             background-color: #ffffff;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -88,7 +86,6 @@
             background-color: var(--secondary-color) !important;
         }
 
-        /* قسم الترحيب (Hero Section) */
         .hero {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -132,7 +129,6 @@
             transform: translateY(-2px);
         }
 
-        /* قسم الدروس والملفات الديناميكية */
         .dynamic-lessons {
             max-width: 1200px;
             margin: 4rem auto;
@@ -208,7 +204,7 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
 
-        /* نافذة تسجيل الدخول المنبثقة (Modal) */
+        /* نافذة تسجيل الدخول المنبثقة */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -275,7 +271,6 @@
             display: none;
         }
 
-        /* الفوتر */
         footer {
             background-color: var(--primary-color);
             color: white;
@@ -294,36 +289,32 @@
 </head>
 <body>
 
-    <!-- الهيدر وقائمة التنقل -->
     <header>
         <nav class="navbar">
-            <a href="#" class="logo">المنصة التعليمية</a>
+            <a href="#" class="logo">المنصة التعليمية - المعلم رباح الفضيلات</a>
             <ul class="nav-links">
                 <li><a href="#">الرئيسية</a></li>
-                <li><a href="#lessons">الدروس والملفات</a></li>
+                <li><a href="#lessons">الدروس والوسائط</a></li>
                 <li><a href="#" class="admin-login-btn" onclick="openLoginModal(event)">دخول المعلم 🔐</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- قسم الترحيب الرئيسي -->
     <section class="hero">
         <div class="hero-content">
             <h1>مرحباً بكم في المنصة التعليمية الرقمية</h1>
-            <p>توفير الخطط الدراسية، أوراق العمل، والملفات التعليمية المحدثة باستمرار.</p>
-            <a href="#lessons" class="btn btn-primary">تصفح أحدث الدروس</a>
+            <p>تصفح أحدث الدروس، الصور، والفيديوهات التعليمية المحدثة باستمرار.</p>
+            <a href="#lessons" class="btn btn-primary">تصفح المحتوى</a>
         </div>
     </section>
 
-    <!-- قسم الدروس والملفات الديناميكية -->
     <section class="dynamic-lessons" id="lessons">
-        <h2 class="section-title">أحدث الدروس والملفات المضافة</h2>
+        <h2 class="section-title">أحدث الدروس والملفات والوسائط المضافة</h2>
         <div id="public-lessons-grid" class="lessons-grid">
-            <!-- سيتم جلب الدروس هنا تلقائياً -->
+            <!-- يتم تحميل الملفات والصور والفيديوهات تلقائياً هنا -->
         </div>
     </section>
 
-    <!-- نافذة تسجيل الدخول المنبثقة الخاصة بالمعلم -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="close-modal" onclick="closeLoginModal()">✕</button>
@@ -343,9 +334,8 @@
         </div>
     </div>
 
-    <!-- الفوتر -->
     <footer>
-        <p>© 2026 جميع الحقوق محفوظة - المنصة التعليمية</p>
+        <p>© 2026 جميع الحقوق محفوظة - المنصة التعليمية | المعلم رباح الفضيلات</p>
     </footer>
 
     <script>
@@ -370,20 +360,18 @@
             const errorMsg = document.getElementById('error-msg');
 
             if (user === CORRECT_USER && pass === CORRECT_PASS) {
-                // الانتقال إلى لوحة التحكم عند صحة البيانات
                 window.location.href = 'admin.html';
             } else {
                 errorMsg.style.display = 'block';
             }
         }
 
-        // جلب الدروس المضافة من لوحة التحكم وعرضها
         function loadPublicLessons() {
             const gridEl = document.getElementById('public-lessons-grid');
             let items = JSON.parse(localStorage.getItem('site_content')) || [];
 
             if (items.length === 0) {
-                gridEl.innerHTML = '<div class="no-lessons"><p>لا توجد دروس أو ملفات منشورة حالياً. ترقبوا المحتوى الجديد قريباً!</p></div>';
+                gridEl.innerHTML = '<div class="no-lessons"><p>لا توجد دروس أو وسائط منشورة حالياً. يرجى الدخول من لوحة التحكم لإضافة محتوى جديد.</p></div>';
                 return;
             }
 
@@ -391,10 +379,16 @@
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'lesson-card';
+                
+                // تحديد أيقونة أو نص حسب نوع المحتوى المضاف
+                let actionText = "عرض / تحميل الملف 📁";
+                if(item.type.includes("صورة")) actionText = "عرض الصورة التعليمية 🖼️";
+                if(item.type.includes("فيديو")) actionText = "مشاهدة الفيديو 🎬";
+
                 card.innerHTML = `
                     <span class="lesson-tag">${item.type}</span>
                     <h3>${item.title}</h3>
-                    <a href="${item.link}" target="_blank" class="lesson-link">عرض / تحميل الملف 📁</a>
+                    <a href="${item.link}" target="_blank" class="lesson-link">${actionText}</a>
                 `;
                 gridEl.appendChild(card);
             });

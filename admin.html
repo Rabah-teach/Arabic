@@ -55,6 +55,11 @@
             font-size: 0.9rem;
             color: white;
             font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-home:hover {
+            background-color: var(--primary-color);
         }
 
         .container {
@@ -77,4 +82,175 @@
             color: var(--primary-color);
             margin-bottom: 1rem;
             border-bottom: 2px solid var(--bg-light);
-            padding-
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .content-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .content-item {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .instruction-box {
+            background-color: #eff6ff;
+            border-right: 4px solid var(--secondary-color);
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>لوحة إدارة المنصة التعليمية</h2>
+        <div class="header-actions">
+            <a href="index.html" class="btn-home" target="_blank">عرض الموقع الرئيسي 🌐</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="panel">
+            <h3>نشر درس، صورة، أو فيديو جديد</h3>
+            <div class="instruction-box">
+                💡 <strong>طريقة الاستخدام:</strong> ارفع الملف أو الفيديو أو الصورة على <strong>Google Drive</strong>، اضغط على مشاركة واجعل الرابط عاماً (أي شخص لديه الرابط)، ثم انسخ الرابط وألصقه هنا. سيتم حفظه ونشره فوراً في الصفحة الرئيسية للطلاب!
+            </div>
+            <form id="upload-form" onsubmit="addContent(event)">
+                <div class="form-group">
+                    <label>عنوان الملف / الدرس / الوسائط</label>
+                    <input type="text" id="item-title" class="form-control" required placeholder="مثال: شرح درس قواعد اللغة العربية - فيديو / صورة توضيحية">
+                </div>
+                <div class="form-group">
+                    <label>رابط قوقل درايف (Google Drive Link)</label>
+                    <input type="url" id="item-link" class="form-control" required placeholder="https://drive.google.com/file/d/...">
+                </div>
+                <div class="form-group">
+                    <label>نوع المحتوى</label>
+                    <select id="item-type" class="form-control">
+                        <option value="درس / ملف كتابي">📄 درس / ملف كتابي (PDF أو مستند)</option>
+                        <option value="صورة تعليمية">🖼️ صورة تعليمية</option>
+                        <option value="فيديو تعليمي">🎬 فيديو تعليمي</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">حفظ ونشر تلقائي في الموقع</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>الملفات والوسائط المنشورة حالياً</h3>
+            <ul id="content-list" class="content-list">
+                <!-- تتحدث ديناميكياً -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // تحميل المحتوى المخزن فور فتح الصفحة
+        function loadStoredContent() {
+            const listEl = document.getElementById('content-list');
+            listEl.innerHTML = '';
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+
+            if (items.length === 0) {
+                listEl.innerHTML = '<p style="text-align: center; color: #64748b;">لا توجد ملفات مرفوعة حالياً.</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'content-item';
+                li.innerHTML = `
+                    <div>
+                        <strong>[${item.type}] ${item.title}</strong><br>
+                        <a href="${item.link}" target="_blank" style="color: var(--secondary-color); font-size: 0.9rem;">رابط الملف</a>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${item.id})">حذف</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function addContent(event) {
+            event.preventDefault();
+            const title = document.getElementById('item-title').value;
+            const link = document.getElementById('item-link').value;
+            const type = document.getElementById('item-type').value;
+
+            const newItem = { title, link, type, id: Date.now() };
+            
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+            items.push(newItem);
+            localStorage.setItem('site_content', JSON.stringify(items));
+
+            document.getElementById('upload-form').reset();
+            loadStoredContent();
+            alert('تم نشر المحتوى بنجاح وعرضه تلقائياً في الصفحة الرئيسية للموقع!');
+        }
+
+        function deleteItem(id) {
+            let items = JSON.parse(localStorage.getItem('site_content')) || [];
+            items = items.filter(item => item.id !== id);
+            localStorage.setItem('site_content', JSON.stringify(items));
+            loadStoredContent();
+        }
+
+        // تشغيل الدالة عند تحميل الصفحة
+        window.onload = loadStoredContent;
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم المعلم</title>
+    <title>لوحة تحكم المعلم - المنصة التعليمية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -95,11 +95,10 @@
             display: none;
         }
 
-        /* لوحة التحكم الفعلية (تكون مخفية حتى يتم تسجيل الدخول) */
+        /* لوحة التحكم الفعلية */
         #dashboard-screen {
             display: none;
             min-height: 100vh;
-            display: flex;
             flex-direction: column;
         }
 
@@ -112,10 +111,26 @@
             align-items: center;
         }
 
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-home {
+            background-color: var(--secondary-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: white;
+        }
+
         .logout-btn {
             background-color: var(--danger-color);
             width: auto;
             padding: 0.5rem 1rem;
+            font-size: 0.9rem;
         }
 
         .container {
@@ -164,6 +179,16 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .instruction-box {
+            background-color: #eff6ff;
+            border-right: 4px solid var(--secondary-color);
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            color: #1e40af;
+        }
     </style>
 </head>
 <body>
@@ -171,7 +196,7 @@
     <!-- 1. شاشة تسجيل الدخول -->
     <div id="login-screen">
         <div class="login-card">
-            <h2>لوحة التحكم الخاصة</h2>
+            <h2>لوحة تحكم المعلم</h2>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>اسم المستخدم</label>
@@ -187,50 +212,53 @@
         </div>
     </div>
 
-    <!-- 2. لوحة التحكم (مخفية افتراضياً) -->
-    <div id="dashboard-screen" style="display: none;">
+    <!-- 2. لوحة التحكم -->
+    <div id="dashboard-screen">
         <header>
-            <h2>لوحة إدارة المحتوى التعليمي</h2>
-            <button class="btn logout-btn" onclick="handleLogout()">تسجيل الخروج</button>
+            <h2>إدارة محتوى المنصة</h2>
+            <div class="header-actions">
+                <a href="index.html" class="btn-home" target="_blank">عرض الموقع الرئيسي 🌐</a>
+                <button class="btn logout-btn" onclick="handleLogout()">تسجيل الخروج</button>
+            </div>
         </header>
 
         <div class="container">
-            <!-- نموذج إضافة درس أو ملف من قوقل درايف -->
             <div class="panel">
-                <h3>إضافة درس أو ملف جديد (رابط Google Drive)</h3>
+                <h3>نشر درس، صورة، أو فيديو جديد</h3>
+                <div class="instruction-box">
+                    💡 <strong>طريقة الاستخدام:</strong> ارفع الملف أو الفيديو أو الصورة على <strong>Google Drive</strong>، اضغط على مشاركة واجعل الرابط عاماً (أي شخص لديه الرابط)، ثم انسخ الرابط وألصقه هنا. سيتم حفظه ونشره فوراً في الصفحة الرئيسية للطلاب!
+                </div>
                 <form id="upload-form" onsubmit="addContent(event)">
                     <div class="form-group">
-                        <label>عنوان الدرس / الملف</label>
-                        <input type="text" id="item-title" class="form-control" required placeholder="مثال: ورقة عمل قواعد اللغة العربية - الصف السابع">
+                        <label>عنوان الملف / الدرس / الوسائط</label>
+                        <input type="text" id="item-title" class="form-control" required placeholder="مثال: شرح درس قواعد اللغة العربية - فيديو / صورة توضيحية">
                     </div>
                     <div class="form-group">
-                        <label>رابط الملف من قوقل درايف (Google Drive Link)</label>
-                        <input type="url" id="item-link" class="form-control" required placeholder="https://drive.google.com/...">
+                        <label>رابط قوقل درايف (Google Drive Link)</label>
+                        <input type="url" id="item-link" class="form-control" required placeholder="https://drive.google.com/file/d/...">
                     </div>
                     <div class="form-group">
                         <label>نوع المحتوى</label>
                         <select id="item-type" class="form-control">
-                            <option value="درس كتابي / خطة">درس كتابي / خطة</option>
-                            <option value="ورقة عمل">ورقة عمل</option>
-                            <option value="صورة / وسائط">صورة / وسائط</option>
+                            <option value="درس / ملف كتابي">📄 درس / ملف كتابي (PDF أو مستند)</option>
+                            <option value="صورة تعليمية">🖼️ صورة تعليمية</option>
+                            <option value="فيديو تعليمي">🎬 فيديو تعليمي</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn" style="background-color: var(--success-color);">حفظ ونشر في الموقع</button>
+                    <button type="submit" class="btn" style="background-color: var(--success-color);">حفظ ونشر تلقائي في الموقع</button>
                 </form>
             </div>
 
-            <!-- قائمة المحتوى الحالي -->
             <div class="panel">
-                <h3>الملفات والدروس المنشورة حالياً</h3>
+                <h3>الملفات المنشورة حالياً</h3>
                 <ul id="content-list" class="content-list">
-                    <!-- سيتم إضافة العناصر هنا برمجياً -->
+                    <!-- تتحدث ديناميكياً -->
                 </ul>
             </div>
         </div>
     </div>
 
     <script>
-        // بيانات الدخول المعرفة مسبقاً
         const CORRECT_USER = "teacher";
         const CORRECT_PASS = "rabah2026";
 
@@ -241,7 +269,6 @@
             const errorMsg = document.getElementById('error-msg');
 
             if (user === CORRECT_USER && pass === CORRECT_PASS) {
-                // إخفاء شاشة الدخول وإظهار لوحة التحكم
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('dashboard-screen').style.display = 'flex';
                 loadStoredContent();
@@ -256,7 +283,6 @@
             document.getElementById('login-form').reset();
         }
 
-        // تخزين وعرض الدروس باستخدام التخزين المحلي للمتصفح (LocalStorage)
         function addContent(event) {
             event.preventDefault();
             const title = document.getElementById('item-title').value;
@@ -271,7 +297,7 @@
 
             document.getElementById('upload-form').reset();
             loadStoredContent();
-            alert('تم نشر المحتوى بنجاح!');
+            alert('تم نشر المحتوى بنجاح وعرضه تلقائياً في الصفحة الرئيسية للموقع!');
         }
 
         function loadStoredContent() {
@@ -290,7 +316,7 @@
                 li.innerHTML = `
                     <div>
                         <strong>[${item.type}] ${item.title}</strong><br>
-                        <a href="${item.link}" target="_blank" style="color: var(--secondary-color); font-size: 0.9rem;">رابط قوقل درايف</a>
+                        <a href="${item.link}" target="_blank" style="color: var(--secondary-color); font-size: 0.9rem;">رابط الملف</a>
                     </div>
                     <button class="delete-btn" onclick="deleteItem(${item.id})">حذف</button>
                 `;
